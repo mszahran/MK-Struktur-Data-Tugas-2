@@ -1,105 +1,69 @@
 import java.util.Arrays;
 
-public class Main {
-    // Merge dua subarray terurut menjadi satu array terurut
-    private static void merge(int arr[], int l, int m, int r) {
-        System.out.println(Arrays.toString(arr) + l + "" + m + "" + r);
-        // Ukuran dua subarray
-        int n1 = m - l + 1;
-        int n2 = r - m;
+public class No01 {
 
-        // Buat array sementara
-        int L[] = new int[n1];
-        int R[] = new int[n2];
-
-        // Salin data ke array sementara
-        for (int i = 0; i < n1; ++i)
-            L[i] = arr[l + i];
-        for (int j = 0; j < n2; ++j)
-            R[j] = arr[m + 1 + j];
-
-        // Gabungkan array sementara menjadi array utama
-        int i = 0, j = 0;
-        int k = l;
-        while (i < n1 && j < n2) {
-            if (L[i] <= R[j]) {
-                arr[k] = L[i];
-                i++;
-            } else {
-                arr[k] = R[j];
-                j++;
-            }
-            k++;
-        }
-
-        // Salin elemen yang tersisa dari L[] jika ada
-        while (i < n1) {
-            arr[k] = L[i];
-            i++;
-            k++;
-        }
-
-        // Salin elemen yang tersisa dari R[] jika ada
-        while (j < n2) {
-            arr[k] = R[j];
-            j++;
-            k++;
-        }
-    }
-
-    // Main function yang melakukan MergeSort pada array
-    private static void sort(int arr[], int l, int r) {
-        // 1. 0 < 5 = TRUE
-        // 2. 0 < 2 = TRUE
-        // 3. 0 < 1 = TRUE
-        // 4. 0 < 0 = FALSE
-        // 5. 1 < 1 = FALSE
-        if (l < r) {
-            // Temukan titik tengah
-            int m = (l + r) / 2;
-            // 1. nilai m = 2
-            // 2. nilai m = 1
-
-            // Urutkan setengah pertama dan kedua
-            sort(arr, l, m);
-            sort(arr, (m + 1), r);
-
-            // Gabungkan dua setengah yang sudah diurutkan
-            merge(arr, l, m, r);
-        }
-    }
-
-    // Method untuk memanggil Merge Sort dari luar
-    public static void mergeSort(int arr[]) {
-        int n = arr.length;
-        sort(arr, 0, n - 1);
-    }
-
-    // Method untuk menampilkan array
-    public static void printArray(int arr[]) {
-        int n = arr.length;
-        for (int i = 0; i < n; ++i)
-            System.out.print(arr[i] + " ");
-        System.out.println();
-    }
-
-    // Contoh penggunaan
-    public static void main(String args[]) {
-        int nilai1 = 10;
-        int nilai2 = 7;
-        int nilai3 = 5;
-        int nilai4 = 9;
+    public static void main(String[] args) {
+        // Inisialisasi nilai data
+        int nilai1 = 5;
+        int nilai2 = 2;
+        int nilai3 = 4;
+        int nilai4 = 1;
         int nilai5 = 3;
-        int nilai6 = 2;
+        int nilai6 = 6;
 
-        int arr[] = {nilai1, nilai2, nilai3, nilai4, nilai5, nilai6};
+        int[] data = {nilai1, nilai2, nilai3, nilai4, nilai5, nilai6};
 
-        System.out.println("Array sebelum diurutkan:");
-        printArray(arr);
+        // Mengurutkan data menggunakan Merge Sort
+        data = mergeSort(data);
 
-        mergeSort(arr);
+        // Menampilkan data yang telah diurutkan
+        System.out.print("Data yang diurutkan: ");
+        for (int i = 0; i < data.length; i++) {
+            System.out.print(data[i] + " ");
+        }
+    }
 
-        System.out.println("Array setelah diurutkan:");
-        printArray(arr);
+    private static int[] mergeSort(int[] data) {
+        if (data.length <= 1) {
+            return data;
+        }
+
+        int middle = data.length / 2;
+        // 5, 2, 4
+        int[] left = Arrays.copyOfRange(data, 0, middle);
+        // 1, 3, 6
+        int[] right = Arrays.copyOfRange(data, middle, data.length);
+
+        left = mergeSort(left); // recursive menjadikan array sebelumnya [5, 2, 4] menjadi [2, 4, 5]
+        right = mergeSort(right); // recursive menjadikan array sebelumnya [1, 3, 6] menjadi [1, 3, 6]
+
+        return merge(left, right);
+    }
+
+    private static int[] merge(int[] left, int[] right) {
+        int[] result = new int[left.length + right.length];
+        int i = 0, j = 0, k = 0;
+
+        // i / left [2, 4, 5]
+        // j / right [1, 3, 6]
+        // result [1, 2, 3, 4, 5]
+        while (i < left.length && j < right.length) {
+            if (left[i] <= right[j]) {
+                result[k++] = left[i++];
+            } else {
+                result[k++] = right[j++];
+            }
+        }
+
+        while (i < left.length) {
+            result[k++] = left[i++];
+        }
+
+        // result [1, 2, 3, 4, 5, 6]
+        while (j < right.length) {
+            result[k++] = right[j++];
+        }
+
+        return result;
     }
 }
